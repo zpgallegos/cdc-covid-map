@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: Open Sans, apple-system, blinkmacsystemfont, Segoe UI, Helvetica Neue,
+        arial, sans-serif;
+}

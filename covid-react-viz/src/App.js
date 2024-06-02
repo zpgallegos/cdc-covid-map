@@ -1,5 +1,3 @@
-import { feature } from "topojson-client";
-
 import InputControls from "./components/InputControls";
 import ChartTitle from "./components/ChartTitle";
 import CovidMap from "./components/CovidMap";
@@ -7,19 +5,34 @@ import Legend from "./components/Legend";
 
 import usMap from "./data/counties-10m.json";
 import data from "./data/properties.json";
+import regionMap from "./data/region_map.json";
+
+import { feature, merge } from "topojson-client";
 
 const stateFeatures = feature(
     usMap,
     usMap.objects.states,
     (a, b) => a !== b
-).features.filter((obj) => data.state_data.hasOwnProperty(obj.id));
+).features.filter((obj) => data.hasOwnProperty(obj.id));
 
 stateFeatures.forEach((d) => {
-    d.measures = data.state_data[d.id];
+    d.measures = data[d.id];
 });
 
-const regionData = data.region_data;
+const regionFeatures = [];
+for (let key in regionMap) {
+    const merged = merge(
+        usMap,
+        usMap.objects.states.geometries.filter((d) => regionMap[key].ids.includes(d.id))
+    );
 
+    regionFeatures.push({
+        type: "Feature",
+        id: key,
+        geometry: merged,
+        centroid: regionMap[key].centroid,
+    });
+}
 
 function App() {
     return (
@@ -27,7 +40,7 @@ function App() {
             <div className="mx-auto" style={{ width: "75%" }}>
                 <InputControls />
                 <ChartTitle />
-                <CovidMap stateFeatures={stateFeatures} regionData={regionData} />
+                <CovidMap stateFeatures={stateFeatures} regionFeatures={regionFeatures} />
                 <Legend />
             </div>
         </div>

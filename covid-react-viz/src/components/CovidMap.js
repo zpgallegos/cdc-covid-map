@@ -10,11 +10,12 @@ import { getStateKey } from "../utils.js";
 const height = 610;
 const width = 975;
 
-const CovidMap = ({ stateFeatures, regionData }) => {
+const CovidMap = ({ stateFeatures, regionFeatures }) => {
     const { state, setState } = useContext(AppContext);
 
     const svgRef = useRef();
     const tooltipRef = useRef();
+    const prevView = useRef(state.view);
 
     useEffect(() => {
         const svg = select(svgRef.current);
@@ -27,9 +28,9 @@ const CovidMap = ({ stateFeatures, regionData }) => {
 
         const { metric, colorScale } = getStateKey(colorScaleMap, state);
 
-        const paths = svg.select(".states").selectAll("path").data(stateFeatures);
+        const states = svg.select(".states").selectAll("path").data(stateFeatures);
 
-        paths
+        states
             .enter()
             .append("path")
             .attr("d", pathGenerator)
@@ -42,14 +43,14 @@ const CovidMap = ({ stateFeatures, regionData }) => {
             .on("mouseover", (event, d) => {
                 svg.select(".highlight").attr("d", pathGenerator(d));
 
-                const [x, y] = pointer(event, svg);
-
                 setState((prevState) => {
                     return {
                         ...prevState,
                         tooltipData: d.measures,
                     };
                 });
+
+                const [x, y] = pointer(event, svg);
 
                 tooltip
                     .transition()
@@ -75,8 +76,55 @@ const CovidMap = ({ stateFeatures, regionData }) => {
                 });
             });
 
-        paths.attr("fill", (d) => colorScale(d.measures[metric]));
-    }, [state, stateFeatures, setState]);
+        if (prevView.current !== "testpos" && state.view === "testpos") {
+            svg.select(".regions")
+                .selectAll("path")
+                .data(regionFeatures)
+                .enter()
+                .append("path")
+                .attr("id", (d) => d.id)
+                .attr("d", pathGenerator)
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)
+                .attr("stroke-linecap", "round")
+                .attr("stroke-linejoin", "round")
+                .attr("pointer-events", "none");
+
+            svg.select(".regionMarkers")
+                .selectAll("circle")
+                .data(regionFeatures)
+                .enter()
+                .append("circle")
+                .attr("cx", (d) => d.centroid[0])
+                .attr("cy", (d) => d.centroid[1])
+                .attr("r", 12.5)
+                .attr("fill", "#fff")
+                .attr("stroke", "black")
+            
+            svg.select(".regionMarkers")
+                .selectAll("text")
+                .data(regionFeatures)
+                .enter()
+                .append("text")
+                .attr("x", (d) => d.centroid[0])
+                .attr("y", (d) => d.centroid[1])
+                .attr("dy", "0.35em")
+                .attr("text-anchor", "middle")
+                .attr("font-size", 12)
+                .attr("fill", "black")
+                .text((d) => d.id);
+
+        } else if (prevView.current === "testpos" && state.view !== "testpos") {
+            svg.select(".regions").selectAll("path").remove();
+            svg.select(".regionMarkers").selectAll("circle").remove();
+            svg.select(".regionMarkers").selectAll("text").remove();
+        }
+
+        states.attr("fill", (d) => colorScale(d.measures[metric]));
+
+        prevView.current = state.view;
+    }, [state, setState, stateFeatures, regionFeatures]);
 
     return (
         <div className="mb-10">
@@ -86,12 +134,14 @@ const CovidMap = ({ stateFeatures, regionData }) => {
                     <DiagonalHatch color="green" />
 
                     <g className="states"></g>
+                    <g className="regions"></g>
+                    <g className="regionMarkers"></g>
 
                     <path
                         className="highlight"
                         fill="none"
                         stroke="#101010"
-                        strokeWidth="3"
+                        strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         style={{ pointerEvents: "none" }}

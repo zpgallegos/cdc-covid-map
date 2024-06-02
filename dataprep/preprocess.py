@@ -5,7 +5,7 @@ import pandas as pd
 
 from numpy import nan
 
-DATA_THROUGH = "May 18 2024"  # hardcoded from the tooltips on the site
+DATA_THROUGH = "May 25 2024"  # hardcoded from the tooltips on the site
 
 ID_MAP = json.loads(open("id_map.json").read())
 
@@ -86,16 +86,16 @@ FORMATS = {
 
 if __name__ == "__main__":
 
-    infile = "united_states_covid19_deaths_ed_visits_and_positivity_by_state.csv"
+    infile = "data/united_states_covid19_deaths_ed_visits_and_positivity_by_state.csv"
 
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-f", "--infile", required=True)
-    args = vars(ap.parse_args())
+    # ap = argparse.ArgumentParser()
+    # ap.add_argument("-f", "--infile", required=True)
+    # args = vars(ap.parse_args())
 
-    infile = args["infile"]
+    # infile = args["infile"]
 
     read_args = {
-        "filepath_or_buffer":infile,
+        "filepath_or_buffer": infile,
         "skiprows": 2,
         "header": "infer",
         "na_values": ["N/A", "Data not available"],
@@ -197,16 +197,18 @@ if __name__ == "__main__":
         buckets = [
             # not sure how they came up with these...
             [1166, 4141],
-            [5759, 9910],
-            [11053, 16564],
-            [18035, 30638],
-            [35903, 55198],
-            [83291, 113045],
+            [5760, 9917],
+            [11054, 16575],
+            [18036, 30651],
+            [35918, 55205],
+            [83308, 113073],
         ]
 
         for a, b in buckets:
             if a <= x <= b:
                 return f"{a:,} - {b:,}"
+        
+        return None
 
     d.insert(d.columns.get_loc(col) + 1, f"{col}_cat", d[col].apply(categorize))
 
@@ -221,17 +223,19 @@ if __name__ == "__main__":
             return "Data not available"
 
         buckets = [
-            [104.8, 206.3],
-            [238.2, 264.2],
+            [104.9, 206.5],
+            [238.5, 264.2],
             [273.3, 294.5],
-            [303, 329.6],
-            [334.8, 375.8],
-            [387.2, 449.3],
+            [303.1, 329.8],
+            [335.0, 375.9],
+            [387.3, 449.4],
         ]
 
         for a, b in buckets:
             if a <= x <= b:
                 return f"{a:,} - {b:,}"
+        
+        return None
 
     d.insert(d.columns.get_loc(col) + 1, f"{col}_cat", d[col].apply(categorize))
 
@@ -363,17 +367,15 @@ if __name__ == "__main__":
 
     d = d.replace(nan, None)
 
-    date_gend = get_date_generated(infile)
-    for df in (d, tbl):
-        df["date_generated"] = date_gend
-        df["data_through"] = DATA_THROUGH
-
-    obj = {
-        "state_data": d.to_dict(orient="index"),
-        "region_data": tbl.to_dict(orient="index"),
-    }
+    d = d.merge(
+        tbl[[k for k in tbl.columns if k.endswith("_fmt") or k.endswith("_cat")]],
+        left_on="region",
+        right_index=True,
+    )
+    d["date_generated"] = get_date_generated(infile)
+    d["data_through"] = DATA_THROUGH
 
     with open(infile.replace(".csv", ".json"), "w") as f:
-        json.dump(obj, f, indent=2)
+        json.dump(d.to_dict(orient="index"), f, indent=2)
 
     d.to_pickle(infile.replace(".csv", ".pkl"))

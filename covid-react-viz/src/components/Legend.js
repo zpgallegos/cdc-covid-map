@@ -1,7 +1,7 @@
-import { AppContext } from "../AppContext";
 import { useContext } from "react";
-import colorScaleMap from "./scales";
+import { AppContext } from "../AppContext";
 import { getStateKey } from "../utils";
+import colorScaleMap from "./scales";
 
 import DiagonalHatchBlue from "../assets/diagonalHatch-blue.svg";
 import DiagonalHatchGreen from "../assets/diagonalHatch-green.svg";
@@ -30,6 +30,25 @@ const legendTitle = {
             per_cap: "Number of COVID-19 deaths per 100,000 people",
         },
     },
+    ed: {
+        pastWeek: {
+            perc: "Percent of ED visits diagnosed as COVID-19",
+            perc_chg:
+                "Percent change in % of visits diagnosed as COVID-19 from last week compared to prior week",
+        },
+    },
+    testpos: {
+        pastWeek: {
+            perc_pos: "COVID-19 Test Positivity (%)",
+            perc_pos_chg: "% Change in test positivity from prior week",
+        },
+        past2Weeks: {
+            perc_pos: "COVID-19 Test Positivity (%)",
+        },
+        past4Weeks: {
+            perc_pos: "COVID-19 Test Positivity (%)",
+        },
+    },
 };
 
 const Legend = () => {
@@ -41,7 +60,7 @@ const Legend = () => {
 
     return (
         <div className="border border-gray-300 rounded-md p-2">
-            <h2 className="text-center font-semibold mb-4">{title}</h2>
+            <h2 className="text-center font-semibold mb-5">{title}</h2>
             <div className="flex justify-center">
                 <div className="w-full flex flex-row justify-between">
                     {categories.map((category, i) => {
@@ -60,7 +79,7 @@ const Legend = () => {
                                 className="flex flex-col items-center text-center"
                             >
                                 <div
-                                    className="w-5 h-5 rounded-full border border-gray-300"
+                                    className="w-5 h-5 rounded-full border border-gray-300 mb-1"
                                     style={style}
                                 ></div>
                                 <p className="text-sm">{category}</p>

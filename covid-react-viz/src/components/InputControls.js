@@ -125,16 +125,17 @@ const InputControls = () => {
                     <div>
                         <p className="font-bold">Metric:</p>
                         {metricVals[state.view][state.timePeriod].map((val, i) => (
-                            <div key={val} className="flex flex-row">
+                            <div key={val} className="block">
                                 <input
                                     type="radio"
                                     id={val}
+                                    className="mr-1"
                                     name="metric"
                                     value={val}
                                     checked={state.metric === val}
                                     onChange={handleChange}
                                 />
-                                <label className="ml-1">
+                                <label>
                                     {metricLabels[state.view][state.timePeriod][i]}
                                 </label>
                             </div>

@@ -59,10 +59,10 @@ const Legend = () => {
     const categories = colorScale.domain();
 
     return (
-        <div className="border border-gray-300 rounded-md py-2 px-4">
-            <h2 className="text-center font-semibold mb-5">{title}</h2>
-            <div className="flex justify-center">
-                <div className="w-full flex flex-row justify-between">
+        <div className="flex flex-col items-center">
+            <h2 className="text-center font-semibold mb-2">{title}</h2>
+            <div className="border border-gray-200 rounded-md py-2 px-4 md:w-full">
+                <div className="flex flex-col md:flex-row md:justify-between">
                     {categories.map((category, i) => {
                         let style;
                         const color = colorScale(category);
@@ -76,10 +76,10 @@ const Legend = () => {
                         return (
                             <div
                                 key={i}
-                                className="flex flex-col items-center text-center"
+                                className="flex flex-row mb-1 md:flex-col md:mb-0 md:items-center md:text-center"
                             >
                                 <div
-                                    className="w-5 h-5 rounded-full border border-gray-300 mb-1"
+                                    className="w-5 h-5 rounded-full border border-gray-300 mb-1 mr-1"
                                     style={style}
                                 ></div>
                                 <p className="text-sm">{category}</p>

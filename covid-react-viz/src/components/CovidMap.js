@@ -94,7 +94,7 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
                 .attr("d", pathGenerator)
                 .attr("fill", "none")
                 .attr("stroke", "black")
-                .attr("stroke-width", 2)
+                .attr("stroke-width", 1.5)
                 .attr("stroke-linecap", "round")
                 .attr("stroke-linejoin", "round")
                 .attr("pointer-events", "none");
@@ -150,7 +150,7 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
                     <path
                         className="highlight"
                         fill="none"
-                        stroke="#c2410c"
+                        stroke="#4f46e5"
                         strokeWidth="0"
                         strokeLinecap="round"
                         strokeLinejoin="round"

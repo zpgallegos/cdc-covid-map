@@ -41,7 +41,11 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
             .attr("stroke-linecap", "round")
             .attr("stroke-linejoin", "round")
             .on("mouseover", (event, d) => {
-                svg.select(".highlight").attr("d", pathGenerator(d));
+                svg.select(".highlight")
+                    .attr("d", pathGenerator(d))
+                    .transition()
+                    .duration(200)
+                    .attr("stroke-width", "2.5");
 
                 setState((prevState) => {
                     return {
@@ -64,7 +68,11 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
                 tooltip.style("top", y + "px").style("left", x + "px");
             })
             .on("mouseout", (event, d) => {
-                svg.select(".highlight").attr("d", null);
+                svg.select(".highlight")
+                    .attr("d", null)
+                    .transition()
+                    .duration(200)
+                    .attr("stroke-width", 0);
 
                 tooltip.transition().duration(200).style("opacity", 0);
 
@@ -100,8 +108,8 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
                 .attr("cy", (d) => d.centroid[1])
                 .attr("r", 12.5)
                 .attr("fill", "#fff")
-                .attr("stroke", "black")
-            
+                .attr("stroke", "black");
+
             svg.select(".regionMarkers")
                 .selectAll("text")
                 .data(regionFeatures)
@@ -114,7 +122,6 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
                 .attr("font-size", 12)
                 .attr("fill", "black")
                 .text((d) => d.id);
-
         } else if (prevView.current === "testpos" && state.view !== "testpos") {
             svg.select(".regions").selectAll("path").remove();
             svg.select(".regionMarkers").selectAll("circle").remove();
@@ -140,8 +147,8 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
                     <path
                         className="highlight"
                         fill="none"
-                        stroke="#101010"
-                        strokeWidth="2.5"
+                        stroke="#c2410c"
+                        strokeWidth="0"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         style={{ pointerEvents: "none" }}

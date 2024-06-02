@@ -49,7 +49,7 @@ const ChartTitle = () => {
 
     return (
         <div className="my-4 text-center">
-            <h1 className="text-2xl font-semibold">{titleText}</h1>
+            <h1 className="text-xl font-semibold">{titleText}</h1>
         </div>
     );
 };

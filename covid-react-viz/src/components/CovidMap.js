@@ -28,9 +28,9 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
 
         const { metric, colorScale } = getStateKey(colorScaleMap, state);
 
-        const states = svg.select(".states").selectAll("path").data(stateFeatures);
-
-        states
+        svg.select(".states")
+            .selectAll("path")
+            .data(stateFeatures)
             .enter()
             .append("path")
             .attr("d", pathGenerator)
@@ -128,7 +128,10 @@ const CovidMap = ({ stateFeatures, regionFeatures }) => {
             svg.select(".regionMarkers").selectAll("text").remove();
         }
 
-        states.attr("fill", (d) => colorScale(d.measures[metric]));
+        svg.select(".states")
+            .selectAll("path")
+            .data(stateFeatures)
+            .attr("fill", (d) => colorScale(d.measures[metric]));
 
         prevView.current = state.view;
     }, [state, setState, stateFeatures, regionFeatures]);

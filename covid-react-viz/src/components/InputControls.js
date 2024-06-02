@@ -83,7 +83,7 @@ const InputControls = () => {
     };
 
     return (
-        <div className="m-5 rounded-lg bg-sky-100">
+        <div className="rounded-lg bg-sky-100">
             <div className="p-4">
                 <div className="flex flex-col space-y-5 mb-5 md:flex-row md:space-y-0 md:space-x-12">
                     <div>

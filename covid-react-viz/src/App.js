@@ -1,3 +1,4 @@
+import IntroBox from "./components/IntroBox";
 import InputControls from "./components/InputControls";
 import ChartTitle from "./components/ChartTitle";
 import CovidMap from "./components/CovidMap";
@@ -37,7 +38,8 @@ for (let key in regionMap) {
 function App() {
     return (
         <div className="App">
-            <div className="mx-auto" style={{ width: "75%" }}>
+            <div className="m-5 lg:mx-auto lg:w-2/3">
+                <IntroBox />
                 <InputControls />
                 <ChartTitle />
                 <CovidMap stateFeatures={stateFeatures} regionFeatures={regionFeatures} />

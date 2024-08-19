@@ -3,7 +3,7 @@ import { AppContext } from "../AppContext";
 import InputExplainBox from "./InputExplainBox";
 
 const viewVals = ["deaths", "ed", "testpos"];
-const viewLabels = ["Deaths", "Emergency Deparment Visits", "Test Positivity"];
+const viewLabels = ["Deaths", "Emergency Department Visits", "Test Positivity"];
 
 const timePeriodVals = {
     deaths: ["pastWeek", "past3mo", "all"],
